@@ -1,0 +1,31 @@
+version: 2.1
+workflows:
+  version: 2
+  deploy-workflow:
+    jobs:
+      build:
+        docker:
+          - image: circleci/node:latest # あなたのプロジェクトに合わせたイメージを使用してください
+        steps:
+          - checkout
+          - run:
+              name: Build
+              command: echo "Building your application..."
+              # 実際のビルドコマンドを記述
+
+      approve:
+        type: approval
+        requires: [build]
+        name: "Approve Deployment to Production"
+        description: "Approve the deployment to the production environment."
+
+      deploy:
+        docker:
+          - image: circleci/node:latest # あなたのプロジェクトに合わせたイメージを使用してください
+        steps:
+          - checkout
+          - run:
+              name: Deploy to Production
+              command: echo "Deploying to production..."
+              # 実際のデプロイコマンドを記述
+        requires: [approve]
