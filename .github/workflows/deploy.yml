@@ -5,6 +5,9 @@ on:
     branches:
       - main
     types: [closed] # PRがマージされたときに実行
+  push:
+    branches:
+      - 'feature/dev-*'
 
 jobs:
   trigger_circleci:
