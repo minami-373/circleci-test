@@ -1,14 +1,23 @@
-name: Simple Trigger Test
+name: Trigger CircleCI on Main Merge
 
 on:
   pull_request:
     branches:
       - main
-    types: [closed]
+    types: [closed] # PRがマージされたときに実行
 
 jobs:
-  test_job:
+  trigger_circleci:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Echo message
-        run: echo "Workflow triggered!"
+      - name: Trigger CircleCI Pipeline
+        uses: actions/curl@v2
+        env:
+          CIRCLECI_API_TOKEN: ${{ secrets.CIRCLECI_API_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -u "${{ env.CIRCLECI_API_TOKEN }}:" \
+            -d '{"branch": "main"}' \
+            "https://circleci.com/api/v2/project/gh/${{ github.repository_owner }}/${{ github.event.repository.name }}/pipeline"
