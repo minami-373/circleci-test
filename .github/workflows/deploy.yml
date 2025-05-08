@@ -1,0 +1,14 @@
+name: Simple Trigger Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo message
+        run: echo "Workflow triggered!"
